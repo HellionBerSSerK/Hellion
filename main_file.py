@@ -1,6 +1,6 @@
 # QT grid pour gérer l'agencement du logiciel
 import tkinter as tk
-
+import threading
 
 class mainWindow(tk.Frame):
 
@@ -73,13 +73,6 @@ if __name__ == '__main__':
                     # Sets row, column
                     view.itemconfig(rect, tags=(str(rowNumber), str(columnNumber)))
                     coordinate[(row, col)] = rect
-                    jardin = tk.Canvas(root, width=((col + 1) * gridWidth) - col * gridWidth,
-                                       height=((row + 1) * gridHeight) - row * gridHeight,
-                                       bg="#ddd")
-                    jardin.pack(side=tk.TOP)
-                    pass
-
-            print(view.find_withtag(('1','2')))
             return coordinate
 
         # set up the canvas for the game board grid
@@ -90,9 +83,9 @@ if __name__ == '__main__':
         palette = tk.Frame(root, bg='red', width=main_w / 6, height=main_h)
         jardin = tk.Canvas(root, width=2 * main_w / 3, height=main_h, bg="#ddd")
 
-        description.pack(side=tk.LEFT, padx=5, pady=5)
-        jardin.pack(side=tk.LEFT, padx=5, pady=5)
-        palette.pack(side=tk.RIGHT, padx=5, pady=5)
+        description.pack(side=tk.LEFT)
+        jardin.pack(side=tk.LEFT)
+        palette.pack(side=tk.RIGHT)
 
         # when you click on the gameboard this event fires
         def clickOnGameBoard(event):
@@ -103,24 +96,21 @@ if __name__ == '__main__':
                 jardin.itemconfig(tk.CURRENT, fill="green")
                 jardin.update_idletasks()
 
-        def moveoveracase(event, lastcase=('-1','-1','current')):
+        def moveoverthecanvas(event, lastcase=('-1','-1','current')):
             if jardin.find_withtag(tk.CURRENT) and (jardin.find_withtag(lastcase) != jardin.find_withtag(tk.CURRENT)):
                 lastcase = jardin.gettags(tk.CURRENT)
                 jardin.itemconfig(tk.CURRENT, activefill="red")
-                jardin.update_idletasks()
                 print("Enter in a case")
 
-        def leaveacase(event):
-            if jardin.find_withtag(tk.CURRENT):
-                jardin.itemconfig(tk.CURRENT, activefill="green")
-                jardin.itemconfig(lastcase,)
-                jardin.update_idletasks()
-                print("Leave a case")
+        def leavethecanvas(event):
+            lastcase = ('-1','-1','current')
+            print("Leave the canvas")
 
 
         # bind an event when you click on the game board
         jardin.bind("<Button-1>", clickOnGameBoard)
-        jardin.bind("<Enter>",moveoveracase)
+        jardin.bind("<Enter>",moveoverthecanvas)
+        jardin.bind("<Leave>",leavethecanvas)
 
 
         # update the game board after it is done being drawn.
