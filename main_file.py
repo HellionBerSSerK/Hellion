@@ -1,6 +1,19 @@
 # QT grid pour gérer l'agencement du logiciel
 import tkinter as tk
-import threading
+
+
+class case:
+    def __init__(self):
+        coordonnee = ('-1', '-1')
+        zone = 0
+        luminosite = 0  # 1= ombre, 2= mi-ombre, 3 plein-soleil
+        type_terre = 'neutre'  # neutre,argileux
+        ph = -1  # entre 0 et 14 (0 étant acide et 14 basique
+
+
+class info:
+    def __init__(self,tuple = ('-1', '-1', 'current')):
+        self.tuple = tuple
 
 
 class mainWindow(tk.Frame):
@@ -49,7 +62,7 @@ if __name__ == '__main__':
         LaunchScrn.pack_forget()
 
         # variables
-        lastcase = ('-1', '-1', 'current')
+        variables = info()
 
         # this is where the 20x20 grid is made
         # set up the view of the game board
@@ -102,16 +115,18 @@ if __name__ == '__main__':
                 jardin.itemconfig(tk.CURRENT, activefill="red")
                 print("Enter in the canvas")
 
-        def motionmouse(event, lastcase=('-1', '-1', 'current')):
-            if jardin.find_withtag(tk.CURRENT) and (jardin.find_withtag(lastcase) != jardin.find_withtag(tk.CURRENT)):
-                lastcase = jardin.gettags(tk.CURRENT)
+        def motionmouse(event):
+            if variables.tuple != jardin.gettags(tk.CURRENT):
+
+                variables.tuple = jardin.gettags(tk.CURRENT)
                 jardin.itemconfig(tk.CURRENT, activefill="red")
                 print("Enter in new case")
+                jardin.update_idletasks()
 
         # bind an event when you click on the game board
         jardin.bind("<Button-1>", clickOnGameBoard)
         jardin.bind("<Enter>", moveoverthecanvas)
-        jardin.bind("<Motion>", motionmouse)
+        jardin.bind("<Motion>",motionmouse)
 
         # update the game board after it is done being drawn.
         root.update_idletasks()
