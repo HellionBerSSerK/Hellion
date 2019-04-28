@@ -33,20 +33,23 @@ class case():
 if __name__ == '__main__':
     root = tk.Tk()
     # set the title of the applicaton window
-    root.title('Blokus')
+    root.title('Potager')
     coordinate = {}
 
 
     def changecolor(row, column, canvas):
-        canvas.itemconfig(coordinate[(row, column)], fill='red')
+        canvas.itemconfig(coordinate[(row, column)], fill='green')
 
 
     # --------------------- GAME STARTED ----------------------------------------
     def gameStart():
         global coordinate
-        print("Game Started")
+        print("Potager")
         # get rid of the launch screen elemenets and show the game board
         LaunchScrn.pack_forget()
+
+        #variables
+        lastcase = ('-1','-1','current')
 
         # this is where the 20x20 grid is made
         # set up the view of the game board
@@ -73,10 +76,10 @@ if __name__ == '__main__':
                     jardin = tk.Canvas(root, width=((col + 1) * gridWidth) - col * gridWidth,
                                        height=((row + 1) * gridHeight) - row * gridHeight,
                                        bg="#ddd")
-                    jardin.pack(side=tk.TOP,padx=1,pady=1)
+                    jardin.pack(side=tk.TOP)
                     pass
 
-            print(view.find_withtag("1,2"))
+            print(view.find_withtag(('1','2')))
             return coordinate
 
         # set up the canvas for the game board grid
@@ -85,10 +88,10 @@ if __name__ == '__main__':
 
         description = tk.Frame(root, bg='yellow', width=main_w / 6, height=main_h)
         palette = tk.Frame(root, bg='red', width=main_w / 6, height=main_h)
-         #jardin = tk.Canvas(root, width=2 * main_w / 3, height=main_h, bg="#ddd")
+        jardin = tk.Canvas(root, width=2 * main_w / 3, height=main_h, bg="#ddd")
 
         description.pack(side=tk.LEFT, padx=5, pady=5)
-        #jardin.pack(side=tk.LEFT, padx=5, pady=5)
+        jardin.pack(side=tk.LEFT, padx=5, pady=5)
         palette.pack(side=tk.RIGHT, padx=5, pady=5)
 
         # when you click on the gameboard this event fires
@@ -96,14 +99,23 @@ if __name__ == '__main__':
             if jardin.find_withtag(tk.CURRENT):
                 print(jardin.gettags(tk.CURRENT))
                 print(type(jardin.gettags(tk.CURRENT)))
+                print(tk.CURRENT)
                 jardin.itemconfig(tk.CURRENT, fill="green")
                 jardin.update_idletasks()
 
-        def moveoveracase(event):
-            if jardin.find_withtag(tk.CURRENT):
+        def moveoveracase(event, lastcase=('-1','-1','current')):
+            if jardin.find_withtag(tk.CURRENT) and (jardin.find_withtag(lastcase) != jardin.find_withtag(tk.CURRENT)):
+                lastcase = jardin.gettags(tk.CURRENT)
                 jardin.itemconfig(tk.CURRENT, activefill="red")
+                jardin.update_idletasks()
+                print("Enter in a case")
 
-
+        def leaveacase(event):
+            if jardin.find_withtag(tk.CURRENT):
+                jardin.itemconfig(tk.CURRENT, activefill="green")
+                jardin.itemconfig(lastcase,)
+                jardin.update_idletasks()
+                print("Leave a case")
 
 
         # bind an event when you click on the game board
