@@ -2,6 +2,7 @@
 import tkinter as tk
 import threading
 
+
 class mainWindow(tk.Frame):
 
     def __init__(self, master=None, width=0.5, height=0.3):
@@ -29,7 +30,6 @@ class case():
         y = column
 
 
-
 if __name__ == '__main__':
     root = tk.Tk()
     # set the title of the applicaton window
@@ -48,8 +48,8 @@ if __name__ == '__main__':
         # get rid of the launch screen elemenets and show the game board
         LaunchScrn.pack_forget()
 
-        #variables
-        lastcase = ('-1','-1','current')
+        # variables
+        lastcase = ('-1', '-1', 'current')
 
         # this is where the 20x20 grid is made
         # set up the view of the game board
@@ -96,22 +96,22 @@ if __name__ == '__main__':
                 jardin.itemconfig(tk.CURRENT, fill="green")
                 jardin.update_idletasks()
 
-        def moveoverthecanvas(event, lastcase=('-1','-1','current')):
+        def moveoverthecanvas(event, lastcase=('-1', '-1', 'current')):
+            if jardin.find_withtag(tk.CURRENT):
+                lastcase = jardin.gettags(tk.CURRENT)
+                jardin.itemconfig(tk.CURRENT, activefill="red")
+                print("Enter in the canvas")
+
+        def motionmouse(event, lastcase=('-1', '-1', 'current')):
             if jardin.find_withtag(tk.CURRENT) and (jardin.find_withtag(lastcase) != jardin.find_withtag(tk.CURRENT)):
                 lastcase = jardin.gettags(tk.CURRENT)
                 jardin.itemconfig(tk.CURRENT, activefill="red")
-                print("Enter in a case")
-
-        def leavethecanvas(event):
-            lastcase = ('-1','-1','current')
-            print("Leave the canvas")
-
+                print("Enter in new case")
 
         # bind an event when you click on the game board
         jardin.bind("<Button-1>", clickOnGameBoard)
-        jardin.bind("<Enter>",moveoverthecanvas)
-        jardin.bind("<Leave>",leavethecanvas)
-
+        jardin.bind("<Enter>", moveoverthecanvas)
+        jardin.bind("<Motion>", motionmouse)
 
         # update the game board after it is done being drawn.
         root.update_idletasks()

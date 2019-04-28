@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0a9b8442-0b40-479d-830c-07d040d2a969" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/toutitoy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/toutitoy.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_file.py" afterDir="false" />
     </list>
@@ -18,8 +16,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main_file.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="108" selection-start-line="108" selection-end-line="108" />
+            <state relative-caret-position="373">
+              <caret line="108" column="35" selection-start-line="108" selection-start-column="35" selection-end-line="108" selection-end-column="35" />
+              <folding>
+                <element signature="e#46#66#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -57,6 +58,8 @@
       <find>pack</find>
       <find>print</find>
       <find>itemconfig</find>
+      <find>5</find>
+      <find>jardin</find>
     </findStrings>
     <replaceStrings>
       <replace>jardin_largeur</replace>
@@ -72,15 +75,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/example_from_internet.py" />
         <option value="$PROJECT_DIR$/exemple_from_internet_2.py" />
+        <option value="$PROJECT_DIR$/example_from_internet.py" />
         <option value="$PROJECT_DIR$/main_file.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="447" />
-    <option name="y" value="-25" />
+    <option name="x" value="-7" />
     <option name="width" value="1294" />
     <option name="height" value="1047" />
   </component>
@@ -106,7 +108,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="C:/Program Files/Git/bin/git.exe" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Potager" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunDashboard">
@@ -188,8 +190,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main_file" />
-        <item itemvalue="Python.exemple_from_internet_2" />
         <item itemvalue="Python.example_from_internet" />
+        <item itemvalue="Python.exemple_from_internet_2" />
       </list>
     </recent_temporary>
   </component>
@@ -204,6 +206,14 @@
       <option name="presentableId" value="Default" />
       <updated>1556347621648</updated>
     </task>
+    <task id="LOCAL-00001" summary="first official version">
+      <created>1556472434870</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1556472434870</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -215,51 +225,25 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49881798" weight="0.2340195" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49881798" visible="true" weight="0.3943662" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49881798" visible="true" weight="0.23293608" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49840763" weight="0.35969663" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49921197" weight="0.32936078" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32936078" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.501182" side_tool="true" visible="true" weight="0.3943662" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50159234" side_tool="true" weight="0.39824945" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main_file.py</url>
-          <line>81</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main_file.py</url>
-          <line>108</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first official version" />
+    <option name="LAST_COMMIT_MESSAGE" value="first official version" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/example_from_internet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python373/Lib/tkinter/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="1282" selection-start-line="1282" selection-end-line="1282" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/exemple_from_internet_2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="166">
@@ -267,10 +251,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python373/Lib/tkinter/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="1282" selection-start-line="1282" selection-end-line="1282" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example_from_internet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main_file.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="108" selection-start-line="108" selection-end-line="108" />
+        <state relative-caret-position="373">
+          <caret line="108" column="35" selection-start-line="108" selection-start-column="35" selection-end-line="108" selection-end-column="35" />
+          <folding>
+            <element signature="e#46#66#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
