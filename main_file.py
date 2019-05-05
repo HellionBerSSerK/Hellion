@@ -5,42 +5,63 @@ import itertools
 
 
 class Case:
-    def __init__(self, m_row=-1, m_column=-1, m_id=-1):
+    def __init__(self, m_row=-1, m_column=-1, m_id=-1, nb_parcelle=0):
         self.row = m_row
         self.column = m_column
         self.id = m_id
-        self.numero_parcelle = 0
+        self.numero_parcelle = nb_parcelle
 
     def __str__(self):
         return f'id {self.id} : ligne {self.row}, colonne {self.column}, n° parcelle {self.numero_parcelle}'
 
 
 class CaseTerre(Case):
-    def __init__(self):
-        Case.__init__(self)
+    def __init__(self, m_row=-1, m_column=-1, m_id=-1, nb_parcelle=0):
+        Case.__init__(self, m_row=-1, m_column=-1, m_id=-1, nb_parcelle=0)
         self.zone = 0
         self.luminosite = 0  # 1= ombre, 2= mi-ombre, 3 plein-soleil
         self.type_terre = 'neutre'  # neutre,argileux
         self.ph = -1  # entre 0 et 14 (0 étant acide et 14 basique
 
 
+class Parcelle:
+    def __init__(self, m_rows, m_column, number_of_parcelle, couleur_de_la_parcelle):
+        self.number_of_row = m_rows
+        self.number_of_columns = m_column
+        self.number_parcelle = number_of_parcelle
+        self.shelve = shelve.open("data/parcelle" + str(number_of_parcelle))
+        self.couleur = couleur_de_la_parcelle
+        self.list_tuple = []
+
+    def init_shelve(self, list_tuple):
+        self.list_tuple = list_tuple
+        for index, (x, y) in enumerate(list_tuple):
+            c = Case(x, y, index + 1, self.number_parcelle)
+            self.shelve[str(index + 1)] = c
+
+
 class Info:
     def __init__(self):
         self.list = []
         self.tuple = ('-1', '-1', 'current')
-        self.old_selected_Case = []
-        self.couleur = {"gray": "#f0f0f0","dark gray":"#4d4a4a", "green": "#83ff44", "red": "#ff6565", "blue": "#0eb1f0"}
+        self.old_selected_case = []
+        self.couleur = {"gray": "#f0f0f0", "dark gray": "#4d4a4a", "green": "#83ff44", "red": "#ff6565",
+                        "blue": "#0eb1f0"}
         self.parcelle_number = 1
         self.zone_valide = True
+        self.couleur_parcelle = ["cyan", "blue", "purple", "yellow", "pink"]
+        self.rows = 20
+        self.columns = 25
+        self.ecart = 2
 
     def reset(self):
         self.list = []
 
     def __str__(self):
-        return f'Case sélectionné : {self.old_selected_Case}'
+        return f'Case sélectionné : {self.old_selected_case}'
 
 
-class mainWindow(tk.Frame):
+class Mainwindow(tk.Frame):
 
     def __init__(self, master=None, width=0.5, height=0.3):
         tk.Frame.__init__(self, master)
@@ -68,31 +89,31 @@ if __name__ == '__main__':
 
     # --------------------- GAME STARTED ----------------------------------------
 
-    def gameStart():
+    def gamestart():
         print("Potager")
         # get rid of the launch screen elemenets and show the game board
         LaunchScrn.pack_forget()
         # variables
         tools = Info()
-        m_shelve = shelve.open("test.txt")
-        quantite = 20
+        m_shelve = shelve.open("data/gamestart")
+        rows = tools.rows
+        columns = tools.columns
         rectangle = True
-        source_Case = Case()
         dict_coor_to_id = {}
+        parcellle_name_and_list_tuple = []
 
-        def reset_source_destination_Case():
-            m_shelve['source_Case'] = Case()
-            m_shelve['destination_Case'] = Case()
+        def reset_source_destination_case():
+            m_shelve['source_case'] = Case()
+            m_shelve['destination_case'] = Case()
 
         # obtient l'objet 'Case' sur lequel le curseur est
-        def get_currentCase(event, jardin):
+        def get_currentcase(event, jardin):
             chosen_rect = jardin.find_closest(event.x, event.y)
             chosen_rect = chosen_rect[0]
             return m_shelve[str(chosen_rect)]
 
         def get_object_by_xy_case(m_tuple):
             return dict_coor_to_id[m_tuple]
-
 
         # parametre = liste de tuple [(1,2),(1,3)]
         # rend grises les Cases dans cette liste
@@ -115,7 +136,7 @@ if __name__ == '__main__':
             else:
                 temp_column = list(range(y2, y1 + 1))
             all_selected_Case = list(itertools.product(temp_row, temp_column))
-            m_tuple_Cases = list(set(tools.old_selected_Case) - set(all_selected_Case))
+            m_tuple_Cases = list(set(tools.old_selected_case) - set(all_selected_Case))
             refresh_cases_in_gray(m_tuple_Cases)
             for m_tuple in all_selected_Case:
                 rect = dict_coor_to_id[m_tuple]
@@ -124,31 +145,91 @@ if __name__ == '__main__':
                     zone_valide = False
                 else:
                     jardin.itemconfig(rect, fill=tools.couleur["green"])
-            tools.old_selected_Case = all_selected_Case
+            tools.old_selected_case = all_selected_Case
             return zone_valide
 
-
         def creation_zone_highlight():
-            source = m_shelve['source_Case']
-            destination = m_shelve['destination_Case']
+            zone_valide = True
+            source = m_shelve['source_case']
+            destination = m_shelve['destination_case']
             print(source)
             print(destination)
             if source.row != destination.row or source.column != destination.column:
-                zone_valide = calcul_zone_rectangle_highlight(source.row, source.column, destination.row, destination.column)
+                zone_valide = calcul_zone_rectangle_highlight(source.row, source.column, destination.row,
+                                                              destination.column)
             tools.zone_valide = zone_valide
 
+        def get_properties_of_zone_validated(old_selected_case_tuple):
+            min_x = old_selected_case_tuple[0][0]
+            max_x = old_selected_case_tuple[0][0]
+            min_y = old_selected_case_tuple[0][1]
+            max_y = old_selected_case_tuple[0][1]
+            for x, y in old_selected_case_tuple:
+                if x < min_x: min_x = x
+                if x > max_x: max_x = x
+                if y < min_y: min_y = y
+                if y > max_y: max_y = y
+            return (max_x - min_x) + 1, (max_y - min_y) + 1
+
+        def display_after_new_parcelle():
+            for i in range(tools.rows):
+                for j in range(tools.columns):
+                    rect = get_object_by_xy_case((i, j))
+                    c = m_shelve[str(rect)]
+                    if c.numero_parcelle != 0:
+                        jardin.itemconfig(rect, fill=tools.couleur_parcelle[c.numero_parcelle % 4])
+                    else:
+                        jardin.itemconfig(rect, fill=tools.couleur["gray"])
+
         def f_validate_button():
-            print(tools.old_selected_Case)
-            for every_case in tools.old_selected_Case:
+            # popupmsg("ëtes vous sur de valider cette parcelle ?")
+            name_parcelle = "parcelle" + str(tools.parcelle_number)
+            print(tools.old_selected_case)
+            parcellle_name_and_list_tuple = [(name_parcelle,tools.old_selected_case)]
+            for every_case in tools.old_selected_case:
                 rect = get_object_by_xy_case(every_case)
                 c = m_shelve[str(rect)]
                 c.numero_parcelle = tools.parcelle_number
-                jardin.itemconfig(c.id,fill=tools.couleur["dark gray"])
                 print(c)
                 m_shelve[str(rect)] = c
+                rows, columns = get_properties_of_zone_validated(tools.old_selected_case)
             tools.parcelle_number += 1
-            tools.old_selected_Case = []
+            tools.old_selected_case = []
+            display_after_new_parcelle()
+           # frame_parcelle = tk.Frame(jardin, background=tools.couleur_parcelle[tools.parcelle_number %4])
+            w = jardin.winfo_width()
+            h = jardin.winfo_height()
+            gridwidth = w / tools.columns
+            gridheight = h / tools.rows
+            source_value = m_shelve['source_case']
+            source_case_x = source_value.row
+            source_case_y = source_value.column
+           # frame_parcelle.place(x=gridwidth * source_case_y + tools.ecart, y=gridheight * source_case_x + tools.ecart,
+                            #height=rows * gridheight - tools.ecart, width=columns * gridwidth - tools.ecart, in_=jardin)
+            parcelle = Parcelle(rows, columns, tools.parcelle_number,
+                                tools.couleur_parcelle[
+                                    tools.parcelle_number % 4])
+            #frame_parcelle.bind("<Button-1>", popupmsg(frame_parcelle,parcelle,"Que voulez-vous faire ?"))
+            #m_shelve["frame_"+name_parcelle] = frame_parcelle
+            m_shelve[name_parcelle]= parcelle
 
+        def popupmsg(frame_object,parcelle,msg):
+            popup = tk.Tk()
+            def leavemini():
+                popup.destroy()
+
+            def kill_frame():
+                frame_object.destroy()
+                for x,y in parcelle.list_tuple:
+                    print(x,y)
+
+            popup.wm_title("Confirmation")
+            label = tk.Label(popup, text=msg)
+            label.pack(side=tk.TOP, fill="x", pady=10)
+            button_open = tk.Button(popup, text="Ouvrir la parcelle", command=leavemini)
+            button_destroy = tk.Button(popup,text="Détruire la parcelle", command=kill_frame)
+            button_open.pack()
+            button_destroy.pack()
 
             # completer pour gerer toutes les Cases présentes entre source et destination
 
@@ -157,23 +238,23 @@ if __name__ == '__main__':
         def board(view):
             w = view.winfo_width()
             h = view.winfo_height()
-            gridWidth = w / quantite
-            gridHeight = h / quantite
-            rowNumber = -1
-            for row in range(quantite):
-                columnNumber = -1
-                rowNumber = rowNumber + 1
-                for col in range(quantite):
-                    columnNumber = columnNumber + 1
-                    rect = view.create_rectangle(col * gridWidth + 2,
-                                                 row * gridHeight + 2,
-                                                 (col + 1) * gridWidth,
-                                                 (row + 1) * gridHeight,
+            gridwidth = w / columns
+            gridheight = h / rows
+            rownumber = -1
+            for row in range(rows):
+                columnnumber = -1
+                rownumber = rownumber + 1
+                for col in range(columns):
+                    columnnumber = columnnumber + 1
+                    rect = view.create_rectangle(col * gridwidth + 2,
+                                                 row * gridheight + 2,
+                                                 (col + 1) * gridwidth,
+                                                 (row + 1) * gridheight,
                                                  fill=tools.couleur["gray"])
                     # Sets row, column
-                    view.itemconfig(rect, tags=(str(rowNumber), str(columnNumber)))
+                    view.itemconfig(rect, tags=(str(rownumber), str(columnnumber)))
                     dict_coor_to_id[(row, col)] = rect
-                    m_shelve[str(rect)] = Case(rowNumber, columnNumber, rect)
+                    m_shelve[str(rect)] = Case(rownumber, columnnumber, rect)
 
         # set up the canvas for the game board grid
         main_w = root.winfo_width()
@@ -188,9 +269,10 @@ if __name__ == '__main__':
 
         presentation.pack(side=tk.TOP)
         description.pack(side=tk.LEFT)
-        jardin.pack(side=tk.LEFT)
+        jardin.pack(side=tk.LEFT, fill=tk.X, expand=tk.YES)
         palette.pack(side=tk.RIGHT)
 
+        ## BIND BOUTTON WITH THEIR MUTUAL FUNCTIONS ##
         def enterInCanvas(event):
             if jardin.find_withtag(tk.CURRENT):
                 tools.list.append(jardin.gettags(tk.CURRENT))
@@ -205,17 +287,19 @@ if __name__ == '__main__':
                 jardin.update_idletasks()
 
         def clickOnGameBoard(event):
-            reset_source_destination_Case()
+            reset_source_destination_case()
+            tools.old_selected_case = []
             reset_case_without_number = []
-            for i in range(quantite):
-                for j in range(quantite):
-                    rect = get_object_by_xy_case((i,j))
+            button_validate_parcelle.pack_forget()
+            for i in range(rows):
+                for j in range(columns):
+                    rect = get_object_by_xy_case((i, j))
                     c = m_shelve[str(rect)]
                     if c.numero_parcelle == 0:
                         reset_case_without_number.append((i, j))
             refresh_cases_in_gray(reset_case_without_number)
             if rectangle:
-                m_shelve['source_Case'] = get_currentCase(event, jardin)
+                m_shelve['source_case'] = get_currentcase(event, jardin)
                 tools.reset()
                 tools.list.append(jardin.gettags(tk.CURRENT))
                 tools.tuple = jardin.gettags(tk.CURRENT)
@@ -224,21 +308,19 @@ if __name__ == '__main__':
         def leftclickmotion(event):
             if rectangle:
                 # faire disparaitre bouton 'validate_parcelle'
-                button_validate_parcelle.pack_forget()
                 jardin.itemconfig(tk.CURRENT, activefill=tools.couleur["green"])
-                currentCase = get_currentCase(event, jardin)
-                m_destination_Case = m_shelve['destination_Case']
-                if currentCase != m_destination_Case:
-                    m_shelve['destination_Case'] = currentCase
+                currentcase = get_currentcase(event, jardin)
+                m_destination_case = m_shelve['destination_case']
+                if currentcase != m_destination_case:
+                    m_shelve['destination_case'] = currentcase
                     zone_valide = creation_zone_highlight()
                 # pour modifier le shelve, il faut extraire sa valeur du type : val =  shelve[key] ; val.x = new_value ; shelve[key] = val
                 # il est impossible de modifier la valeur quand elle est dans le shelve et qu'elle soit sauvegarder !
 
         def releasebutton1(event):
             if rectangle:
-                if len(tools.old_selected_Case) >= 2 and tools.zone_valide:
+                if len(tools.old_selected_case) >= 2 and tools.zone_valide:
                     button_validate_parcelle.pack()
-
 
         # bind an event when you click on the game board
         jardin.bind("<Button-1>", clickOnGameBoard)
@@ -247,6 +329,7 @@ if __name__ == '__main__':
         jardin.bind("<B1-Motion>", leftclickmotion)
         jardin.bind("<ButtonRelease-1>", releasebutton1)
 
+
         # update the game board after it is done being drawn.
         root.update_idletasks()
 
@@ -254,10 +337,10 @@ if __name__ == '__main__':
         board(jardin)
 
 
-    LaunchScrn = mainWindow(root)
+    LaunchScrn = Mainwindow(root)
     LaunchScrn.config(bg="#eee")
 
-    b = tk.Button(LaunchScrn, text='start', command=gameStart)
+    b = tk.Button(LaunchScrn, text='start', command=gamestart)
     b.pack()
 
     root.mainloop()
